@@ -44,7 +44,7 @@ jobs:
       matrix:
         include:
         - language: c-cpp
-          build-mode: autobuild
+          build-mode: manual
         - language: python
           build-mode: none
         # CodeQL supports the following values keywords for 'language': 'c-cpp', 'csharp', 'go', 'java-kotlin', 'javascript-typescript', 'python', 'ruby', 'swift'
@@ -64,6 +64,12 @@ jobs:
     # or others). This is typically only required for manual builds.
     # - name: Setup runtime (example)
     #   uses: actions/setup-example@v1
+
+    # Add setup step for C++ compiler
+    - name: Setup C++ Compiler
+      uses: actions/setup-cpp@v1
+      with:
+        compiler: gcc # or specify another compiler like 'clang'
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
