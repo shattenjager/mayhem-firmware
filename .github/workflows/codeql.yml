@@ -67,7 +67,7 @@ jobs:
 
     # Add setup step for C++ compiler
     - name: Setup C++ Compiler
-      uses: lukka/setup-cpp@v1
+      uses: aminya/setup-cpp@v0.37.0
       with:
         compiler: gcc # or specify another compiler like 'clang'
 
