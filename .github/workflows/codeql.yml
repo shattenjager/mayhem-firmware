@@ -93,7 +93,6 @@ jobs:
     - if: matrix.build-mode == 'manual'
       shell: bash
       run: |
-        make bootstrap
         make release
         echo '  make release
         echo 'If you are using a "manual" build mode for one or more of the' \
