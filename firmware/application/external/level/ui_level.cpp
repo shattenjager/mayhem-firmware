@@ -33,7 +33,7 @@ using namespace portapack;
 using namespace tonekey;
 using portapack::memory::map::backup_ram;
 
-namespace ui {
+namespace ui::external_app::level {
 
 // Function to map the value from one range to another
 int32_t LevelView::map(int32_t value, int32_t fromLow, int32_t fromHigh, int32_t toLow, int32_t toHigh) {
@@ -130,9 +130,16 @@ LevelView::LevelView(NavigationView& nav)
 
     freqman_set_modulation_option(field_mode);
     field_mode.on_change = [this](size_t, OptionsField::value_t v) {
-        if (v != -1) {
-            change_mode(v);
+        static freqman_index_t last_mode = WFM_MODULATION;
+        if (v > SPEC_MODULATION) {
+            if (last_mode == SPEC_MODULATION)
+                v = AM_MODULATION;
+            else
+                v = SPEC_MODULATION;
+            field_mode.set_selected_index(v);
         }
+        last_mode = v;
+        change_mode(v);
     };
     field_mode.set_by_value(radio_mode);  // Reflect the mode into the manual selector
     field_bw.set_selected_index(radio_bw);
@@ -329,4 +336,4 @@ void LevelView::on_freqchg(int64_t freq) {
     button_frequency.set_text("<" + to_string_short_freq(freq) + " MHz>");
 }
 
-} /* namespace ui */
+}  // namespace ui::external_app::level
