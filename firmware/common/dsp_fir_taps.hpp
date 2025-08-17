@@ -1491,6 +1491,26 @@ constexpr fir_taps_real<64> taps_64_lp_1875_2166{
     }},
 };
 
+/* 1st Wideband FM demod baseband filter of audio AM tones ,
+   to pass all DSB band of  AM  fsubcarrier 2.4Khz mod. with APT */
+/* 24kHz int16_t input
+ * -> FIR filter, BPF center 2k4 carrier ,APT  BW 2kHz
+ * -> 12kHz int16_t output, gain of 1.0 (I think).
+ */
+constexpr fir_taps_real<64> taps_64_bpf_2k4_bw_2k{
+    .low_frequency_normalized = -0.1875f,  // not updated, this is just for LPF , waterfall GUI,  we are not using in BPF NOAA app.
+    .high_frequency_normalized = 0.1875f,  // not used GUI in NOAA App.
+    .transition_normalized = 0.03f,        // not used GUI in NOAA app.
+    .taps = {{-45, -29, 32, 63, 0, -125, -181, -81, 61,
+              0, -329, -635, -551, -147, 0, -547, -1404, -1625,
+              -849, 0, -414, -2118, -3358, -2422, 0, 911, -1792,
+              -6126, -6773, 0, 11839, 21131, 21131, 11839, 0, -6773,
+              -6126, -1792, 911, 0, -2422, -3358, -2118, -414, 0,
+              -849, -1625, -1404, -547, 0, -147, -551, -635, -329,
+              0, 61, -81, -181, -125, 0, 63, 32, -29,
+              -45}},
+};
+
 // TPMS decimation filters ////////////////////////////////////////////////
 
 // IFIR image-reject filter: fs=2457600, pass=100000, stop=407200, decim=4, fout=614400
@@ -1629,4 +1649,36 @@ static constexpr fir_taps_real<24> taps_BTLE_2M_PHY_decim_0 = {
 
     }},
 };
+
+// Tested to be better at capturing both 4.0 and 5.0 device. Better attenuation at channel end.
+static constexpr fir_taps_real<24> taps_BTLE_Dual_PHY = {
+    .low_frequency_normalized = -750000.0f / 4000000.0f,
+    .high_frequency_normalized = 750000.0f / 4000000.0f,
+    .transition_normalized = 250000.0f / 4000000.0f,
+    .taps = {{3,
+              -5,
+              -97,
+              -144,
+              317,
+              1099,
+              396,
+              -2887,
+              -4814,
+              1912,
+              18134,
+              32767,
+              32767,
+              18134,
+              1912,
+              -4814,
+              -2887,
+              396,
+              1099,
+              317,
+              -144,
+              -97,
+              -5,
+              3}},
+};
+
 #endif /*__DSP_FIR_TAPS_H__*/

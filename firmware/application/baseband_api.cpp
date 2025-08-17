@@ -105,10 +105,10 @@ void WFMConfig::apply() const {
 
 void WFMAMConfig::apply() const {
     const WFMAMConfigureMessage message{
-        decim_0,               // 	Fixed 24 taps array : taps_16k0_decim_0
-        decim_1,               // 	Fixed 32 taps array : taps_84k_wfm_decim_1
-        taps_64_lp_1875_2166,  // Fixed channel audio filter , 64 taps array , to filter DSB AM 2k4 carrier before demod. AM .
-        17000,                 // NOAA satellite tx , FM deviation = +-17Khz.
+        decim_0,         // 	Fixed 24 taps array : taps_16k0_decim_0
+        decim_1,         // Dynamic  32 taps array : taps_80k_wfmam_decim_1, 38k_wfmam
+        taps_64_lp_bpf,  // Dynamic 64 taps array , to filter modulated DSB AM 2k4 carrier before demod. AM .(LPF / BPF)
+        17000,           // NOAA satellite tx , FM deviation = +-17Khz.
         apt_audio_12k_notch_2k4_config,
         apt_audio_12k_lpf_2000hz_config};
     send_message(&message);
@@ -186,13 +186,14 @@ void set_nrf(const uint32_t baudrate, const uint32_t word_length, const uint32_t
     send_message(&message);
 }
 
-void set_fsk(const size_t deviation) {
+void set_fsk(const uint8_t samplesPerSymbol, const uint32_t syncWord, const uint8_t syncWordLength, const uint32_t preamble, const uint8_t preambleLength, uint16_t numDataBytes) {
     const FSKRxConfigureMessage message{
-        taps_200k_decim_0,
-        taps_16k0_decim_1,
-        taps_11k0_channel,
-        2,
-        deviation};
+        samplesPerSymbol,
+        syncWord,
+        syncWordLength,
+        preamble,
+        preambleLength,
+        numDataBytes};
 
     send_message(&message);
 }
